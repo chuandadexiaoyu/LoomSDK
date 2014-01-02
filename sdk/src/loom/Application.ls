@@ -296,6 +296,9 @@ package loom
             group.registerManager(commandManager);
         }
 
+        public static var disableStageRender = false;
+        public static var signalEnableStageRender = false;
+
         /**
          * Internal function to let the Stage update whenever we render.
          */
@@ -304,7 +307,16 @@ package loom
             touchProcessor.advanceTime(1.0 / 60.0);
             Loom2D.juggler.advanceTime(1.0 / 60.0);
             theStage.advanceTime(1.0 / 60.0);
-            theStage.render();
+
+            if (!disableStageRender)
+                theStage.render();
+
+            if (signalEnableStageRender)
+            {
+                signalEnableStageRender = false;
+                disableStageRender = false;
+
+            }
         }
 
         protected function onAssetStreamCountChange(quantity:int):void

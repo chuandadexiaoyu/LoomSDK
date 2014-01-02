@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
+import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
 
 
 /**
@@ -79,12 +81,29 @@ public class LoomCamera
 
         // start the image capture Intent
         ctx.startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+
+        ctx.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Cocos2dxGLSurfaceView.mainView.onPause();
+                Cocos2dxGLSurfaceView.mainView.setVisibility(View.GONE);
+            }
+        });        
+
     }
 
     public static void onActivityResult(Activity ctx, int requestCode, int resultCode, Intent data) 
     {
         if (requestCode != CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE)
             return;
+
+        ctx.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Cocos2dxGLSurfaceView.mainView.onResume();
+                Cocos2dxGLSurfaceView.mainView.setVisibility(View.VISIBLE);
+            }
+        });        
 
         if (resultCode == Activity.RESULT_OK) 
         {
